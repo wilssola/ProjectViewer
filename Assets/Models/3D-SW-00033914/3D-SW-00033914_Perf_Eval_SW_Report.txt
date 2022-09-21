@@ -1,0 +1,31 @@
+Instance of the following were suppressed or opened from new location when this file was opened
+
+File	Message	Response	
+C:\Imel\Drawings\Da 34000 a 34999\SW-00034210.SLDASM	Unable to locate the file	
+C:\Imel\Library\U - SISTEMI DI FISSAGGIO\FISSAGGI PER TUBI\SUPPORTO PER TUBI +GF TIPO 061 PP METRICO.SLDPRT	Unable to locate the file	
+C:\Imel\Library\U - SISTEMI DI FISSAGGIO\VITERIA\DADO EN.SLDPRT	Unable to locate the file	
+C:\Imel\Library\U - SISTEMI DI FISSAGGIO\VITERIA\RONDELLA PNC PIANA NORMALE.SLDPRT	Unable to locate the file	
+C:\Imel\Library\U - SISTEMI DI FISSAGGIO\VITERIA\VITE TCEI.SLDPRT	Unable to locate the file	
+
+
+The following messages were automatically dismissed when this file was opened
+
+3D-SW-00033914.SLDASM	The following component configurations could not be found.
+
+LIVELLOSTATO A95-1 : LIVELLOSTATO A95 
+RONDELLA PLC PIANA LARGA-1 : Ø M8 - AISI 316
+RONDELLA PLC PIANA LARGA-2 : Ø M8 - AISI 304
+RONDELLA PLC PIANA LARGA-1 : Ø M8 - AISI 304
+RONDELLA PLC PIANA LARGA-2 : Ø M8 - AISI 304
+RONDELLA PLC PIANA LARGA-1 : Ø M8 - AISI 316
+RONDELLA PLC PIANA LARGA-2 : Ø M8 - AISI 316
+RONDELLA PLC PIANA LARGA-1 : Ø M8 - AISI 304
+RONDELLA PLC PIANA LARGA-2 : Ø M8 - AISI 304
+RONDELLA PLC PIANA LARGA-1 : Ø M8 - AISI 304
+RONDELLA PLC PIANA LARGA-2 : Ø M8 - AISI 304
+RONDELLA PLC PIANA LARGA-1 : Ø M8 - AISI 316
+RONDELLA PLC PIANA LARGA-2 : Ø M8 - AISI 316
+
+If the configuration was renamed, then the same configuration will be used. 
+Otherwise, the last active configuration will be substituted in each instance.	OK
+
