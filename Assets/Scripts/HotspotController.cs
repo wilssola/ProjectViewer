@@ -15,6 +15,8 @@ public class HotspotController : MonoBehaviour
     public Transform target, pivot;
 
     public Canvas canvas;
+    public SpriteRenderer sprite;
+    public SpriteGlow.SpriteGlowEffect glow;
 
     public Animator animator;
 
@@ -62,12 +64,21 @@ public class HotspotController : MonoBehaviour
     {
         if (!ViewController.Instance.Camera.orthographic)
         {
-            if(!canvas.enabled)
+            if (!canvas.enabled)
+            {
                 canvas.enabled = true;
+                sprite.enabled = true;
+                glow.enabled = true;
+            }
+
             canvas.transform.LookAt(2f * canvas.transform.position - ViewController.Instance.Camera.transform.position);
         }
         else
+        {
             canvas.enabled = false;
+            sprite.enabled = false;
+            glow.enabled = false;
+        }
     }
 
     private bool CheckIsVisible(RaycastHit hit)
@@ -107,13 +118,20 @@ public class HotspotController : MonoBehaviour
             if (!visible) return;
             
             canvas.enabled = true;
+            sprite.enabled = true;
+            glow.enabled = true;
             animator.SetBool(_hotspot, true);
         }
         else
         {
             //canvas.enabled = false;
             animator.SetBool(_hotspot, false);
-            Timer.Register(0.5f, () => canvas.enabled = false);
+            Timer.Register(0.5f, () =>
+            {
+                canvas.enabled = false;
+                sprite.enabled = false;
+                glow.enabled = false;
+            });
         }
     }
 

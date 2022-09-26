@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-
 using UnityEngine;
 
 using TMPro;
@@ -40,8 +39,12 @@ public class ViewController : MonoBehaviour
     private Vector3 _initialMousePerspectiveWorldPosition;
 
     public PostProcessProfile postProcessProfile;
-    private PostProcessOutline _postProcessOutline;
+    private PostProcessOutline _outline;
     private MotionBlur _motionBlur;
+
+    private bool canOrbit = true;
+    private bool canPan = true;
+    private bool canZoom = true;
 
     private void SetLast()
     {
@@ -116,8 +119,8 @@ public class ViewController : MonoBehaviour
 
     private void EnableOutline(bool active)
     {
-        if (_postProcessOutline != null)
-            _postProcessOutline.active = active;
+        if (_outline != null)
+            _outline.active = active;
     }
     
     private void EnableBlur(bool active)
@@ -155,8 +158,7 @@ public class ViewController : MonoBehaviour
 
         if (postProcessProfile != null)
         {
-            _postProcessOutline = postProcessProfile.GetSetting<PostProcessOutline>();
-
+            _outline = postProcessProfile.GetSetting<PostProcessOutline>();
             _motionBlur = postProcessProfile.GetSetting<MotionBlur>();
             
             EnableOutline(true);
@@ -171,13 +173,55 @@ public class ViewController : MonoBehaviour
         if (OnHotspot) return;
         
         LimitCamera();
-            
-        if (Input.GetMouseButtonDown(0))
-            _initialMouseViewportPosition = Camera.ScreenToViewportPoint(Input.mousePosition);
-        else if (Input.GetMouseButton(0))
-            Orbit();
+        LimitCameraRotation();
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.touchCount == 0)
+        {
+            canOrbit = true;
+            canPan = true;
+            canZoom = true;
+            
+            Zoom(Input.GetAxis("Mouse ScrollWheel"));
+        }
+
+        if (canOrbit)
+        {
+            if (Input.GetMouseButtonDown(0) && (Input.touchCount != 2 && Input.touchCount != 3))
+            {
+                _initialMouseViewportPosition = Camera.ScreenToViewportPoint(Input.mousePosition);
+            }
+            else if (Input.GetMouseButton(0) && (Input.touchCount != 2 && Input.touchCount != 3))
+            {
+                Orbit();
+
+                canPan = false;
+                canZoom = false;
+            }
+        }
+
+        if (Input.touchCount == 2)
+        {
+            var touchZero = Input.GetTouch(0);
+            var touchOne = Input.GetTouch(1);
+
+            var touchZeroInitialPosition = touchZero.position - touchZero.deltaPosition;
+            var touchOneInitialPosition = touchOne.position - touchOne.deltaPosition;
+
+            var initialMagnitude = (touchZeroInitialPosition - touchOneInitialPosition).magnitude;
+            var magnitude = (touchZero.position - touchOne.position).magnitude;
+
+            var difference = magnitude - initialMagnitude;
+
+            if (difference != 0)
+            {
+                canOrbit = false;
+                canPan = false;
+            }
+            
+            Zoom(difference * 0.01f);
+        }
+
+        if ((Input.GetMouseButtonDown(1) && Input.touchCount == 0) || (Input.GetMouseButtonDown(0) && Input.touchCount == 3))
         {
             // Orthographic
             _initialMouseWorldPosition = Camera.ScreenToWorldPoint(Input.mousePosition);
@@ -185,29 +229,46 @@ public class ViewController : MonoBehaviour
             // Perspective
             _initialMousePerspectiveWorldPosition = GetPerspectiveWorldPosition(0);
         }
-        else if (Input.GetMouseButton(1))
+        else if ((Input.GetMouseButton(1) && Input.touchCount == 0) || (Input.GetMouseButton(0) && Input.touchCount == 3))
+        {
             Pan();
 
-        Zoom(Input.GetAxis("Mouse ScrollWheel"));
-        
+            canOrbit = false;
+            canZoom = false;
+        }
+
         LimitCamera();
+        LimitCameraRotation();
     }
 
     private void LateUpdate()
     {
         LimitCamera();
+        LimitCameraRotation();
     }
     
     private void FixedUpdate()
     {
         LimitCamera();
+        LimitCameraRotation();
+    }
+
+    private void LimitCameraRotation()
+    {
+        return;
+        
+        var angles = Camera.transform.rotation.eulerAngles;
+        
+        angles.x = Math.Clamp(angles.x, 0f, 90f);
+        
+        Camera.transform.rotation = Quaternion.Euler(angles);
     }
 
     private void LimitCamera()
     {
         const float minHeight = 1f;
-        
-        var maxPosition = zoomMax * (onOrthographic ? 1.5f : 1f);
+
+        var maxPosition = zoomMax;
 
         var cameraPosition = Camera.transform.position;
 
@@ -269,6 +330,8 @@ public class ViewController : MonoBehaviour
         
         EnableOutline(!onOrthographic);
         EnableBlur(!onOrthographic);
+        
+        SetOrbit(!onOrthographic);
 
         UpdateOrthographicUI();
     }
@@ -312,17 +375,12 @@ public class ViewController : MonoBehaviour
         _initialMouseViewportPosition = newViewportPosition;
         
         LimitCamera();
+        LimitCameraRotation();
     }
 
     private void SetOrbit(bool onOrbit)
     {
-        if (OnHotspot)
-        {
-            this.onOrbit = false;
-            return;
-        }
-        
-        this.onOrbit = onOrbit;
+        this.onOrbit = onOrbit && !OnHotspot && !onOrthographic;
 
         if (onOrbit)
             Orbit();
@@ -399,7 +457,7 @@ public class ViewController : MonoBehaviour
         if (canZoom)
         {
             var previousPosition = Camera.transform.position;
-            Camera.transform.position += Camera.transform.forward * zoomDifference * zoomPosition * (Camera.orthographic ? (zoomDifference > 0 ? 0.1f : 10f) : 1f);
+            Camera.transform.position += Camera.transform.forward * zoomDifference * zoomPosition * (Camera.orthographic ? (zoomDifference > 0 ? 0.1f : 2f) : 1f);
             
             var targetPosition = Camera.transform.position;
             CheckLimitCamera(targetPosition, previousPosition);

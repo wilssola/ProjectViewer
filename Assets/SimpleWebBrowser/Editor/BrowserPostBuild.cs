@@ -69,7 +69,7 @@ public class BrowserPostBuild
                     break;
             }
             default:
-                Debug.LogError("Web browser is not supported on this platform!");
+                Debug.LogWarning("Web browser is not supported on this platform!");
                 break;
         }
     }

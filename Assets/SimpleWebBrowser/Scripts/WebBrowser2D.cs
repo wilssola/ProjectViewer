@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Text;
@@ -610,3 +611,4 @@ if (UIEnabled)
         }
     }
 }
+#endif

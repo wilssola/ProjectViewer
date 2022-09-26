@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -52,3 +53,4 @@ public class SampleDynamicHandler : MonoBehaviour,IDynamicRequestHandler {
         return _previousstate;
     }
 }
+#endif

@@ -17,6 +17,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Shoes
+    second: {fileID: 2100000, guid: 15418872901d65a45aee6d216295c534, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Skin
     second: {fileID: 2100000, guid: d05f6a9fe17f3c144bee6034171fe908, type: 2}
   materials:

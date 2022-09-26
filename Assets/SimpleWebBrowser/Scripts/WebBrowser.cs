@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+using System;
 using MessageLibrary;
 using UnityEngine;
 using UnityEngine.UI;
@@ -453,3 +454,4 @@ namespace SimpleWebBrowser {
         
     }
 }
+#endif

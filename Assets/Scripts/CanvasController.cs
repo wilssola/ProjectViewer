@@ -4,7 +4,9 @@ using SimpleWebBrowser;
 public class CanvasController : MonoBehaviour
 {
     public Animator web;
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
     public WebBrowser2D webBrowser2D;
+#endif
 
     public static CanvasController Instance;
 
@@ -36,7 +38,9 @@ public class CanvasController : MonoBehaviour
         
         web.SetBool(_browser, true);
         
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
         webBrowser2D.Navigate(url);
+#endif
     }
     
     private void HideWebBrowser()
