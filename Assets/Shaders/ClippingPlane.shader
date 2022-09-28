@@ -1,4 +1,4 @@
-﻿Shader "Tutorial/021_Clipping_Plane"{
+﻿Shader "Custom/ClippingPlane" {
 	//show values to edit in inspector
 	Properties{
 		_Color ("Tint", Color) = (0, 0, 0, 1)

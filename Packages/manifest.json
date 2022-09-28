@@ -48,7 +48,7 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0",
-    "com.valax321.postprocessing": "1.1.0"
+    "com.unityfx.outline.postprocessing": "0.2.0"
   },
   "scopedRegistries": [
     {
@@ -58,9 +58,7 @@
         "com.akbiggs.unitytimer",
         "com.openupm",
         "com.unityfx.outline",
-        "com.unityfx.outline.postprocessing",
-        "com.valax321.postprocessing",
-        "net.roystan.unityoutlineshader"
+        "com.unityfx.outline.postprocessing"
       ]
     }
   ]

@@ -5,7 +5,8 @@ using UnityEngine;
 using TMPro;
 
 using UnityEngine.Rendering.PostProcessing;
-using Valax321.PostProcess.Runtime;
+using PostProcessing.Runtime;
+using UnityFx.Outline;
 
 public class ViewController : MonoBehaviour
 {
@@ -26,8 +27,12 @@ public class ViewController : MonoBehaviour
 
     [SerializeField] private TMP_Text controlOrbitText;
     [SerializeField] private TMP_Text controlOrthographicText;
+    
+    [SerializeField] private OutlineBehaviour outline;
+    [SerializeField] private PostProcessVolume volume;
 
     public static ViewController Instance;
+    
     public Camera Camera { private set; get; }
     public bool OnHotspot { private set; get; }
 
@@ -37,8 +42,7 @@ public class ViewController : MonoBehaviour
     private Vector3 _initialMouseWorldPosition;
     private Vector3 _initialMouseViewportPosition;
     private Vector3 _initialMousePerspectiveWorldPosition;
-
-    public PostProcessProfile postProcessProfile;
+    
     private PostProcessOutline _outline;
     private MotionBlur _motionBlur;
 
@@ -119,8 +123,11 @@ public class ViewController : MonoBehaviour
 
     private void EnableOutline(bool active)
     {
+        if (outline != null)
+            outline.enabled = Application.platform == RuntimePlatform.WebGLPlayer && active;
+
         if (_outline != null)
-            _outline.active = active;
+            _outline.active = Application.platform == RuntimePlatform.WindowsPlayer && active;
     }
     
     private void EnableBlur(bool active)
@@ -156,10 +163,10 @@ public class ViewController : MonoBehaviour
         UpdateOrthographicUI();
         UpdateOrbitUI();
 
-        if (postProcessProfile != null)
+        if (volume != null && volume.profile != null)
         {
-            _outline = postProcessProfile.GetSetting<PostProcessOutline>();
-            _motionBlur = postProcessProfile.GetSetting<MotionBlur>();
+            _outline = volume.profile.GetSetting<PostProcessOutline>();
+            _motionBlur = volume.profile.GetSetting<MotionBlur>();
             
             EnableOutline(true);
             EnableBlur(true);
@@ -258,9 +265,7 @@ public class ViewController : MonoBehaviour
         return;
         
         var angles = Camera.transform.rotation.eulerAngles;
-        
         angles.x = Math.Clamp(angles.x, 0f, 90f);
-        
         Camera.transform.rotation = Quaternion.Euler(angles);
     }
 
@@ -327,6 +332,10 @@ public class ViewController : MonoBehaviour
         
         Camera.orthographic = onOrthographic;
         this.onOrthographic = Camera.orthographic;
+
+        if (onOrthographic)
+            if(Vector3.Distance(Camera.transform.position, target.transform.position) < zoomMax)
+                Camera.transform.Translate(new Vector3(0, 0, -zoomMax));
         
         EnableOutline(!onOrthographic);
         EnableBlur(!onOrthographic);
